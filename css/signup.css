@@ -320,3 +320,11 @@
   .hero { display: none; }
   .panel { border-radius: var(--radius); }
 }
+
+/* ---------- Multi-page (XHTML) additions ---------- */
+a.btn { text-decoration: none; }
+/* Moving between steps: the form fades out, the next page fades its step in */
+html.fs-leaving .column { animation: stepOut .2s ease-in both; }
+html.fs-leaving #signup .hero { animation: none; }
+/* Only fade the photo in on the first sign-up page of the visit */
+html.fs-returning-signup .hero::before { animation: none; }

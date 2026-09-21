@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Movimenti · Fundstore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,300&amp;family=Onest:wght@400;500;600;700&amp;display=swap" />
+
+<!-- Icons: Phosphor Icons 2.1.1 (MIT), vendored in vendor/phosphor-icons -->
+<link rel="stylesheet" href="vendor/phosphor-icons/regular/style.css" />
+<link rel="stylesheet" href="vendor/phosphor-icons/bold/style.css" />
+<link rel="stylesheet" href="vendor/phosphor-icons/duotone/style.css" />
+
+<!-- Prototype styles -->
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/signup.css" />
+<link rel="stylesheet" href="css/app.css" />
+<link rel="stylesheet" href="css/prototype.css" />
+<link rel="stylesheet" href="css/animations.css" />
+
+<!-- Shared helpers + state; loaded in <head> so returning visits skip the entrance animations -->
+<script src="js/core.js"></script>
+</head>
+<body data-page="movimenti">
+
+<p class="proto-badge"><i class="ph ph-info" aria-hidden="true"></i>Prototipo di design · i dati inseriti non vengono inviati</p>
+
+<div class="app" id="app">
+<aside class="sidebar">
+    <nav class="nav" aria-label="Menu principale">
+      <a class="nav__item" href="dossier.xhtml">
+        <span class="nav__icon"><i class="ph-duotone ph-house-simple" aria-hidden="true"></i></span>
+        <span class="nav__label">Dossier</span>
+      </a>
+      <a class="nav__item" href="fondi.xhtml">
+        <span class="nav__icon"><i class="ph ph-list-magnifying-glass" aria-hidden="true"></i></span>
+        <span class="nav__label">Fondi</span>
+      </a>
+      <a class="nav__item is-active" href="movimenti.xhtml" aria-current="page">
+        <span class="nav__icon"><i class="ph ph-arrows-down-up" aria-hidden="true"></i></span>
+        <span class="nav__label">Movimenti e Ordini</span>
+      </a>
+      <a class="nav__item" href="esperti.xhtml">
+        <span class="nav__icon"><i class="ph ph-strategy" aria-hidden="true"></i></span>
+        <span class="nav__label">Esperti</span>
+      </a>
+      <a class="nav__item" href="posta.xhtml">
+        <span class="nav__icon"><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i><span class="nav__dot" id="postaDot" aria-label="Nuovo messaggio"></span></span>
+        <span class="nav__label">Posta</span>
+      </a>
+    </nav>
+
+    <section class="promo" aria-labelledby="promoTitle">
+      <span class="icon-box"><i class="ph-duotone ph-clock-countdown" aria-hidden="true"></i></span>
+      <h2 class="promo__title" id="promoTitle">Investi senza attese</h2>
+      <p class="promo__text">
+        Attivando il wallet di Fundstore investi in un click, e vieni remunerato sulla liquidità in giacenza, oggi <b>1,xx%</b>
+        <span class="info">
+          <button type="button" class="info__trigger" aria-describedby="walletTip" aria-label="Dettagli sul tasso"><i class="ph ph-info" aria-hidden="true"></i></button>
+          <span class="tooltip" role="tooltip" id="walletTip">Valore al xx/xx/xx. Il tasso di remunerazione applicato è variabile e pari a <b>Euribor 3 Mesi - 0,6%</b></span>
+        </span>
+      </p>
+      <button type="button" class="btn-sm btn-sm--sky" data-activate="data-activate">Attiva il wallet</button>
+    </section>
+
+    <a class="me" href="profilo.xhtml">
+      <span class="avatar" data-user="initials">EB</span>
+      <span>
+        <span class="me__name" data-user="fullname">Edoardo Bizzarri</span>
+        <span class="me__sub">Profilo</span>
+      </span>
+    </a>
+  </aside>
+<div class="main">
+<header class="banner">
+      <div class="banner__inner">
+        <i class="ph-duotone ph-hand-waving banner__icon" aria-hidden="true"></i>
+        <div>
+          <p class="banner__title">Benvenuto, <span data-user="firstname">Edoardo</span>!</p>
+          <p class="banner__text">Sblocca tutte le funzionalità completando la registrazione online in 10 minuti</p>
+        </div>
+        <button type="button" class="btn-sm btn-sm--night" data-activate="data-activate">Completa la registrazione</button>
+      </div>
+    </header>
+<main class="content">
+<section class="page" data-page="movimenti">
+        <h1 class="page-title">Movimenti e Ordini</h1>
+        <div class="card tabs-card">
+          <nav class="tabs" aria-label="Movimenti e Ordini">
+            <a class="tab is-active" href="movimenti.xhtml" aria-current="page"><i class="ph-duotone ph-arrows-down-up" aria-hidden="true"></i>Movimenti</a>
+            <a class="tab" href="ordini.xhtml"><i class="ph ph-shopping-cart" aria-hidden="true"></i>Ordini</a>
+          </nav>
+          <div class="tab-panel empty panel-empty">
+            <div class="empty__art" aria-hidden="true"><i class="ph-duotone ph-bank"></i></div>
+            <p class="empty__title">Nessun movimento</p>
+            <button type="button" class="btn-sm btn-sm--sky" data-activate="data-activate">Inizia a Investire</button>
+            <button type="button" class="btn-sm btn-sm--outline" data-activate="data-activate">Attiva il wallet</button>
+          </div>
+          </div>
+      </section>
+</main>
+</div>
+<div class="chat" role="img" aria-label="Chat con Fundstore"><i class="ph ph-chat-centered-text" aria-hidden="true"></i></div>
+</div>
+
+<!-- Activation modal -->
+<div class="modal-backdrop" id="activation" hidden="hidden">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="activationTitle">
+    <div class="modal__body">
+      <h2 class="modal__title" id="activationTitle">Completa la tua registrazione su Fundstore</h2>
+      <p class="modal__lead">Prima di iniziare, assicurati di avere a portata di mano:</p>
+      <ul class="modal__list">
+        <li><i class="ph-duotone ph-check-circle" aria-hidden="true"></i><div><p class="modal__item">Un documento d’identità valido</p></div></li>
+        <li><i class="ph-duotone ph-check-circle" aria-hidden="true"></i><div><p class="modal__item">Codice Fiscale</p></div></li>
+        <li><i class="ph-duotone ph-check-circle" aria-hidden="true"></i><div><p class="modal__item">IBAN del tuo conto corrente</p><p class="modal__hint">Lo useremo per le verifiche antiriciclaggio richieste e come conto d’appoggio al tuo dossier Fundstore</p></div></li>
+        <li><i class="ph-duotone ph-check-circle" aria-hidden="true"></i><div><p class="modal__item">Un dispositivo mobile con fotocamera</p><p class="modal__hint">Per caricare i documenti e firmare il tuo contratto tramite OTP</p></div></li>
+        <li><i class="ph-duotone ph-check-circle" aria-hidden="true"></i><div><p class="modal__item">Il tuo SPID</p><p class="modal__hint">Per firmare il contratto</p></div></li>
+      </ul>
+      <button type="button" class="btn btn--sky" aria-disabled="true"><span class="btn__label">Completa in 10 minuti</span></button>
+    </div>
+    <img class="modal__photo" id="modalPhoto" src="assets/images/activation-modal.jpg" alt="Donna sorridente con uno smartphone in mano" width="379" height="539" />
+    <button type="button" class="modal__close" aria-label="Chiudi"><i class="ph ph-x" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -770,3 +770,14 @@
   .tab { height: auto; min-height: 48px; padding: 8px 10px; text-align: center; }
   .page-head { flex-wrap: wrap; gap: 12px; }
 }
+
+/* ---------- Multi-page (XHTML) additions ---------- */
+a.nav__item, a.me, a.tab { text-decoration: none; }
+a.tab.is-active { pointer-events: none; }
+/* Leaving a page: content fades out, the next page fades its section in */
+html.fs-leaving .content, html.fs-leaving #signup { animation: stepOut .2s ease-in both; }
+/* Banner slide, hand wave and chat pop play once per visit, not on every page */
+html.fs-returning .app,
+html.fs-returning .banner,
+html.fs-returning .banner__icon,
+html.fs-returning .chat { animation: none; }
