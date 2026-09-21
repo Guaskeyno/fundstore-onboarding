@@ -1,0 +1,26 @@
+/* Fundstore onboarding prototype · 'design prototype' disclosure label */
+
+/* ---------- Prototype label ---------- */
+.proto-badge {
+  position: fixed;
+  left: 50%; bottom: 12px;
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 32px);
+  padding: 5px 12px;
+  border: 1px solid var(--pearl);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .92);
+  color: var(--pidgeon);
+  font-size: 12px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+  box-shadow: 0 4px 14px -8px rgba(12, 26, 49, .35);
+}
+.proto-badge i { color: var(--cloud); font-size: 14px; }
+@media (max-width: 760px) {
+  .proto-badge { white-space: normal; text-align: center; }
+}

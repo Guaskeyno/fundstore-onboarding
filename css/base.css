@@ -1,0 +1,37 @@
+/* Fundstore onboarding prototype · design tokens (Figma brand names) and base reset */
+
+/* ---------- Fundstore tokens (Figma brand names) ---------- */
+:root {
+  --night: #0C1A31;
+  --pidgeon: #3B4656;
+  --cloud: #7194BA;
+  --milan: #C3C3C3;
+  --sky: #96C2E8;
+  --pearl: #E0E8F2;
+  --ivory: #F7F9FB;
+  --suede: #EFE9DD;
+  --sand: #F9F4EB;
+  --mint: #ECF2ED;
+  --tram: #457D4B;
+  --sempione: #0B3D10;
+  --metro: #F23A3B;
+  --ruby: #5B1314;
+  --pink: #FFD5D5;
+  --white: #FFFFFF;
+
+  --radius: 12px;
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --font: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--sand);
+  color: var(--night);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+button, input { font: inherit; color: inherit; }
