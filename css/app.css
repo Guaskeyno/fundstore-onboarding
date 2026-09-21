@@ -246,16 +246,16 @@
   cursor: pointer;
   transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .12s ease;
 }
-.btn-sm:not(:disabled):active { transform: scale(.98); }
+.btn-sm:not([aria-disabled="true"]):active { transform: scale(.98); }
 .btn-sm:focus-visible { outline: 2px solid var(--cloud); outline-offset: 2px; }
 .btn-sm--sky { background: var(--sky); color: var(--night); }
 .btn-sm--sky.btn-sm--edge { border-color: var(--cloud); }
-.btn-sm--sky:not(:disabled):hover { background: #88B8E2; box-shadow: 0 4px 14px -6px rgba(113, 148, 186, .7); }
+.btn-sm--sky:not([aria-disabled="true"]):hover { background: #88B8E2; box-shadow: 0 4px 14px -6px rgba(113, 148, 186, .7); }
 .btn-sm--outline { background: var(--white); border-color: var(--sky); color: var(--night); }
-.btn-sm--outline:not(:disabled):hover { background: var(--ivory); border-color: var(--cloud); }
+.btn-sm--outline:not([aria-disabled="true"]):hover { background: var(--ivory); border-color: var(--cloud); }
 .btn-sm--night { background: var(--night); border-color: var(--white); color: var(--white); }
-.btn-sm--night:not(:disabled):hover { background: var(--white); color: var(--night); }
-.btn-sm:disabled { cursor: default; }
+.btn-sm--night:not([aria-disabled="true"]):hover { background: var(--white); color: var(--night); }
+.btn-sm[aria-disabled="true"] { cursor: default; }
 
 /* chips */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -274,7 +274,7 @@
   white-space: nowrap;
   transition: background-color .18s ease, border-color .18s ease, transform .12s ease, padding .2s var(--ease-out);
 }
-.chip:disabled { cursor: default; }
+.chip[aria-disabled="true"] { cursor: default; }
 .chip--edge { border-color: var(--pearl); }
 
 /* empty states */
@@ -531,7 +531,7 @@
   transition: opacity .2s ease, transform .25s var(--ease-out);
 }
 .filter-status.is-visible { opacity: 1; transform: none; }
-.filter-status button {
+.filter-status .filter-reset {
   margin-left: 6px;
   padding: 0;
   border: 0;
@@ -541,7 +541,7 @@
   font-weight: 700;
   cursor: pointer;
 }
-.filter-status button:hover { color: var(--night); }
+.filter-status .filter-reset:hover { color: var(--night); }
 .keyword-chips { max-width: 660px; margin: 12px 24px 0; }
 .keyword-chips .chip { cursor: pointer; }
 .keyword-chips .chip:hover { background: #6386AD; }

@@ -22,7 +22,8 @@
 <link rel="stylesheet" href="css/prototype.css" />
 <link rel="stylesheet" href="css/animations.css" />
 
-<!-- Shared helpers + state; loaded in <head> so returning visits skip the entrance animations -->
+<!-- jQuery 3.7.1 (as in production) + shared helpers/state; loaded in <head> so returning visits skip the entrance animations -->
+<script src="vendor/jquery/jquery-3.7.1.min.js"></script>
 <script src="js/core.js"></script>
 </head>
 <body data-page="signup-start">
@@ -32,7 +33,7 @@
 <div id="signup">
 <main class="shell">
 <section class="panel">
-    <div class="toast-region" id="toastRegion" role="status" aria-live="polite"></div>
+    <div class="toast-region" role="status" aria-live="polite"></div>
 
     <div class="column">
       <div class="logo" role="img" aria-label="Fundstore"></div>
@@ -42,10 +43,10 @@
       <div class="step is-active" data-step="start">
         <p class="subtitle">La piattaforma italiana indipendente per gli investitori che ragionano a lungo termine</p>
         <div class="actions">
-          <button type="button" class="btn btn--night" data-action="google">
+          <a class="btn btn--night" href="#" role="button" data-action="google">
             <span class="btn__google" aria-hidden="true"></span>
             <span class="btn__label">Continua con Google</span>
-          </button>
+          </a>
           <a class="btn btn--white" href="signup-details.xhtml">
             <span class="btn__label">Continua con il tuo indirizzo email</span>
           </a>

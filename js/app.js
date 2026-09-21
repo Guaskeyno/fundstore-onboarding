@@ -1,176 +1,184 @@
-/* Fundstore onboarding prototype · account area
-   Runs on every account page (dossier, fondi, movimenti, ordini, esperti, posta, approfondimenti, profilo).
-   Each block only wires up the markup present on the current page. */
-(() => {
-  const { $, $$, wait, user, esc, flag } = window.FS;
-  const pageId = document.body.getAttribute('data-page');
+/* Fundstore onboarding prototype · account pages
+   dossier, fondi, movimenti, ordini, esperti, posta, approfondimenti, profilo.
+   Requires jQuery 3.7.1 and js/core.js. Every block works on classes / data attributes, so it only
+   does something on the pages that contain the matching markup. */
+(function ($, FS) {
+  'use strict';
 
-  flag('seenApp', true);
+  var page = $('body').attr('data-page');
+  FS.flag('seenApp', true);
 
-  /* ---------- Name from the sign-up form ---------- */
-  const nome = user.nome || 'Edoardo';
-  const cognome = user.cognome || 'Bizzarri';
-  $$('[data-user="firstname"]').forEach(el => { el.textContent = nome; });
-  $$('[data-user="fullname"]').forEach(el => { el.textContent = `${nome} ${cognome}`; });
-  $$('[data-user="initials"]').forEach(el => { el.textContent = (nome[0] + cognome[0]).toUpperCase(); });
+  /* ---------- Name from the sign-up form (PROTOTYPE ONLY: rendered by the server in production) ---------- */
+  var nome = FS.user.nome || 'Edoardo';
+  var cognome = FS.user.cognome || 'Bizzarri';
+  $('[data-user="firstname"]').text(nome);
+  $('[data-user="fullname"]').text(nome + ' ' + cognome);
+  $('[data-user="initials"]').text((nome.charAt(0) + cognome.charAt(0)).toUpperCase());
 
   /* ---------- Posta unread dot: disappears the first time Posta is opened ---------- */
-  const postaDot = $('#postaDot');
-  if (postaDot) {
-    const onPosta = pageId === 'posta' || pageId === 'approfondimenti';
-    if (flag('postaRead')) {
-      postaDot.hidden = true;
-    } else if (onPosta) {
-      flag('postaRead', true);
-      wait(400).then(() => postaDot.classList.add('is-read'));
+  $('.nav__dot').each(function () {
+    var $dot = $(this);
+    if (FS.flag('postaRead')) {
+      $dot.prop('hidden', true);
+    } else if (page === 'posta' || page === 'approfondimenti') {
+      FS.flag('postaRead', true);
+      FS.wait(400).then(function () { $dot.addClass('is-read'); });
     }
-  }
+  });
 
   /* ---------- Fondi · search (active, no results by design) ---------- */
-  const search = $('.search');
-  if (search) {
-    const searchInput = $('#fundSearch');
-    searchInput.addEventListener('input', () => search.classList.toggle('has-value', !!searchInput.value));
-    searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
-    $('.search__clear').addEventListener('click', () => {
-      searchInput.value = '';
-      search.classList.remove('has-value');
-      searchInput.focus();
+  $(document)
+    .on('input', '.search__input', function () {
+      $(this).closest('.search').toggleClass('has-value', !!this.value);
+    })
+    .on('keydown', '.search__input', function (e) {
+      if (e.key === 'Enter') e.preventDefault();
+    })
+    .on('click', '.search__clear', function (e) {
+      e.preventDefault();
+      var $search = $(this).closest('.search').removeClass('has-value');
+      $search.find('.search__input').val('').trigger('focus');
     });
-  }
 
-  /* ---------- Posta · checkboxes (messages cannot be opened) ---------- */
-  const checkAll = $('[data-check="all"]');
-  if (checkAll) {
-    const checkItems = $$('[data-check="item"]');
-    const setCheck = (el, on) => el.setAttribute('aria-checked', String(on));
-    checkAll.addEventListener('click', () => {
-      const on = checkAll.getAttribute('aria-checked') !== 'true';
-      [checkAll, ...checkItems].forEach(el => setCheck(el, on));
-    });
-    checkItems.forEach(el => el.addEventListener('click', () => {
-      setCheck(el, el.getAttribute('aria-checked') !== 'true');
-      setCheck(checkAll, checkItems.every(i => i.getAttribute('aria-checked') === 'true'));
-    }));
-  }
+  /* ---------- Checkboxes: a "select all" plus items, grouped by their card ---------- */
+  $(document).on('click', '.check', function (e) {
+    e.preventDefault();
+    var $check = $(this);
+    var $scope = $check.closest('.card');
+    var $all = $scope.find('.check[data-check="all"]');
+    var $items = $scope.find('.check[data-check="item"]');
+
+    if ($check.is($all)) {
+      var on = $check.attr('aria-checked') !== 'true';
+      $all.add($items).attr('aria-checked', String(on));
+    } else {
+      $check.attr('aria-checked', String($check.attr('aria-checked') !== 'true'));
+      $all.attr('aria-checked', String($items.filter('[aria-checked="true"]').length === $items.length));
+    }
+  });
 
   /* ---------- Esperti · cards + keyword filter (data in js/data/experts.js) ---------- */
-  const expertsGrid = $('#experts');
-  if (expertsGrid) {
-    const { KEYWORDS, EXPERTS } = window.FS.data;
+  $('.experts').each(function () {
+    var $grid = $(this);
+    var experts = FS.data.EXPERTS || [];
+    var keywords = FS.data.KEYWORDS || [];
+    var $chips = $('.keyword-chips');
+    var $status = $('.filter-status');
+    var activeKeyword = null;
+    var filterRun = 0;
 
-    // Markup is injected as XML (the page is served as application/xhtml+xml), so it must stay well-formed.
-    expertsGrid.innerHTML = EXPERTS.map((x, i) => {
-      const initials = x.name.replace('Dr.ssa ', '').split(' ').map(w => w[0]).slice(0, 2).join('');
-      const avatar = x.photo
-        ? `<div class="expert__avatar" role="img" aria-label="${esc(x.name)}" style="background-image:url('${esc(x.photo)}')"></div>`
-        : `<div class="expert__avatar" aria-hidden="true">${esc(initials)}</div>`;
-      return `
-        <article class="card expert" data-index="${i}">
-          <div class="expert__band${x.band === 'pearl' ? ' expert__band--pearl' : ''}"></div>
-          ${avatar}
-          <div class="expert__body">
-            <h3 class="expert__name">${esc(x.name)}</h3>
-            <p class="expert__role">${esc(x.role)}</p>
-            <div class="expert__mark" aria-hidden="true">“</div>
-            <p class="expert__quote">${esc(x.quote)}</p>
-            <div class="expert__meta">
-              <span><i class="ph-duotone ph-globe-hemisphere-west" aria-hidden="true"></i>${esc(x.langs)}</span>
-              <span><i class="ph ph-bookmark-simple" aria-hidden="true"></i>${esc(x.focus)}</span>
-            </div>
-            <button type="button" class="btn-sm btn-sm--outline" disabled="disabled">Incontra ${esc(x.first)}</button>
-          </div>
-        </article>`;
-    }).join('');
+    // Built as strings and parsed as XML (the page is application/xhtml+xml): keep it well-formed.
+    $grid.html($.map(experts, function (x, i) {
+      var initials = $.map(x.name.replace('Dr.ssa ', '').split(' '), function (w) { return w.charAt(0); }).slice(0, 2).join('');
+      var avatar = x.photo
+        ? '<div class="expert__avatar" role="img" aria-label="' + FS.esc(x.name) + '" style="background-image:url(\'' + FS.esc(x.photo) + '\')"></div>'
+        : '<div class="expert__avatar" aria-hidden="true">' + FS.esc(initials) + '</div>';
+      return '' +
+        '<article class="card expert" data-index="' + i + '">' +
+          '<div class="expert__band' + (x.band === 'pearl' ? ' expert__band--pearl' : '') + '"></div>' +
+          avatar +
+          '<div class="expert__body">' +
+            '<h3 class="expert__name">' + FS.esc(x.name) + '</h3>' +
+            '<p class="expert__role">' + FS.esc(x.role) + '</p>' +
+            '<div class="expert__mark" aria-hidden="true">“</div>' +
+            '<p class="expert__quote">' + FS.esc(x.quote) + '</p>' +
+            '<div class="expert__meta">' +
+              '<span><i class="ph-duotone ph-globe-hemisphere-west" aria-hidden="true"></i>' + FS.esc(x.langs) + '</span>' +
+              '<span><i class="ph ph-bookmark-simple" aria-hidden="true"></i>' + FS.esc(x.focus) + '</span>' +
+            '</div>' +
+            // Deactivated in the prototype: rendered like <h:commandLink disabled="true">
+            '<span class="btn-sm btn-sm--outline" aria-disabled="true">Incontra ' + FS.esc(x.first) + '</span>' +
+          '</div>' +
+        '</article>';
+    }).join(''));
 
-    const chipsWrap = $('#keywordChips');
-    chipsWrap.innerHTML = KEYWORDS.map(k =>
-      `<button type="button" class="chip chip--edge" aria-pressed="false" data-keyword="${esc(k)}"><i class="ph-bold ph-check" aria-hidden="true"></i>${esc(k)}</button>`
-    ).join('');
+    $chips.html($.map(keywords, function (k) {
+      return '<a class="chip chip--edge" href="#" role="button" aria-pressed="false" data-keyword="' + FS.esc(k) + '">' +
+        '<i class="ph-bold ph-check" aria-hidden="true"></i>' + FS.esc(k) + '</a>';
+    }).join(''));
 
-    const cards = $$('.expert', expertsGrid);
-    cards.forEach(c => c.addEventListener('animationend', () => {
-      if (c.classList.contains('is-entering')) { c.classList.remove('is-entering'); c.style.animationDelay = ''; }
-    }));
-    const filterStatus = $('#filterStatus');
-    let activeKeyword = null;
-    let filterRun = 0;
+    var $cards = $grid.children('.expert');
+    $cards.on('animationend', function () {
+      if ($(this).hasClass('is-entering')) $(this).removeClass('is-entering').css('animation-delay', '');
+    });
 
-    const applyFilter = async keyword => {
+    function applyFilter(keyword) {
+      var run = ++filterRun;
       activeKeyword = keyword;
-      const run = ++filterRun;
-      $$('.chip', chipsWrap).forEach(c => {
-        const on = c.getAttribute('data-keyword') === keyword;
-        c.classList.toggle('is-selected', on);
-        c.setAttribute('aria-pressed', String(on));
+
+      $chips.children('.chip').each(function () {
+        var on = $(this).attr('data-keyword') === keyword;
+        $(this).toggleClass('is-selected', on).attr('aria-pressed', String(on));
       });
 
-      const matches = cards.filter((c, i) => !keyword || EXPERTS[i].tags.includes(keyword));
-      const leaving = cards.filter(c => !c.hidden && !matches.includes(c));
-
-      $('span', filterStatus).textContent = keyword
-        ? `${matches.length} ${matches.length === 1 ? 'esperto' : 'esperti'} per «${keyword}»`
-        : '';
-      filterStatus.classList.toggle('is-visible', !!keyword);
-
-      leaving.forEach(c => { c.classList.remove('is-entering'); c.classList.add('is-leaving'); });
-      if (leaving.length) await wait(180);
-      if (run !== filterRun) return;
-
-      cards.forEach(c => {
-        c.classList.remove('is-leaving', 'is-entering');
-        c.hidden = !matches.includes(c);
+      var $matches = $cards.filter(function () {
+        return !keyword || $.inArray(keyword, experts[$(this).attr('data-index')].tags) > -1;
       });
-      matches.forEach((c, i) => {
-        void c.offsetWidth;
-        c.style.animationDelay = `${i * 45}ms`;
-        c.classList.add('is-entering');
-      });
-    };
+      var $leaving = $cards.filter(function () { return !this.hidden; }).not($matches);
 
-    chipsWrap.addEventListener('click', e => {
-      const chip = e.target.closest('.chip');
-      if (!chip) return;
-      const keyword = chip.getAttribute('data-keyword');
+      $status.find('span').text(keyword
+        ? $matches.length + ($matches.length === 1 ? ' esperto' : ' esperti') + ' per «' + keyword + '»'
+        : '');
+      $status.toggleClass('is-visible', !!keyword);
+
+      $leaving.removeClass('is-entering').addClass('is-leaving');
+      return FS.wait($leaving.length ? 180 : 0).then(function () {
+        if (run !== filterRun) return;
+        $cards.removeClass('is-leaving is-entering').each(function () {
+          this.hidden = !$matches.is(this);
+        });
+        $matches.each(function (i) {
+          void this.offsetWidth;
+          $(this).css('animation-delay', (i * 45) + 'ms').addClass('is-entering');
+        });
+      });
+    }
+
+    $chips.on('click', '.chip', function (e) {
+      e.preventDefault();
+      var keyword = $(this).attr('data-keyword');
       applyFilter(keyword === activeKeyword ? null : keyword);
     });
-    $('#filterReset').addEventListener('click', () => applyFilter(null));
-  }
+    $status.on('click', '.filter-reset', function (e) {
+      e.preventDefault();
+      applyFilter(null);
+    });
+  });
 
   /* ---------- Activation modal (every account page) ---------- */
-  const modal = $('#activation');
-  if (modal) {
-    let lastFocus = null;
+  $('.modal-backdrop').each(function () {
+    var $modal = $(this);
+    var lastFocus = null;
 
-    const openModal = () => {
+    function open(e) {
+      if (e) e.preventDefault();
       lastFocus = document.activeElement;
-      modal.hidden = false;
-      modal.classList.remove('is-leaving');
-      document.documentElement.style.overflow = 'hidden';
-      $('.modal__close', modal).focus();
-    };
-    const closeModal = async () => {
-      if (modal.hidden || modal.classList.contains('is-leaving')) return;
-      modal.classList.add('is-leaving');
-      await wait(200);
-      modal.hidden = true;
-      modal.classList.remove('is-leaving');
-      document.documentElement.style.overflow = '';
-      if (lastFocus) lastFocus.focus();
-    };
+      $modal.prop('hidden', false).removeClass('is-leaving');
+      $('html').css('overflow', 'hidden');
+      $modal.find('.modal__close').trigger('focus');
+    }
+    function close(e) {
+      if (e) e.preventDefault();
+      if ($modal.prop('hidden') || $modal.hasClass('is-leaving')) return;
+      $modal.addClass('is-leaving');
+      FS.wait(200).then(function () {
+        $modal.prop('hidden', true).removeClass('is-leaving');
+        $('html').css('overflow', '');
+        if (lastFocus) lastFocus.focus();
+      });
+    }
 
-    $$('[data-activate]').forEach(btn => btn.addEventListener('click', openModal));
-    $('.modal__close', modal).addEventListener('click', closeModal);
-    document.addEventListener('keydown', e => {
-      if (modal.hidden) return;
-      if (e.key === 'Escape') closeModal();
-      if (e.key === 'Tab') {
-        const focusables = $$('button', modal);
-        const i = focusables.indexOf(document.activeElement);
-        const next = focusables[(i + (e.shiftKey ? -1 : 1) + focusables.length) % focusables.length];
+    $(document).on('click', '[data-activate]', open);
+    $modal.on('click', '.modal__close', close);
+    $(document).on('keydown', function (e) {
+      if ($modal.prop('hidden')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'Tab') {                 // keep focus inside the dialog
+        var $focusables = $modal.find('a[href]');
+        var i = $focusables.index(document.activeElement);
         e.preventDefault();
-        next.focus();
+        $focusables.eq((i + (e.shiftKey ? -1 : 1) + $focusables.length) % $focusables.length).trigger('focus');
       }
     });
-  }
-})();
+  });
+})(jQuery, window.FS);

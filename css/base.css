@@ -35,3 +35,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 button, input { font: inherit; color: inherit; }
+/* Actions are links (<h:commandLink> renders <a>); deactivated ones render as <span aria-disabled> */
+a[role="button"], a[role="checkbox"] { text-decoration: none; }
+[aria-disabled="true"] { cursor: default; }

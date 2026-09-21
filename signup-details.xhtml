@@ -22,7 +22,8 @@
 <link rel="stylesheet" href="css/prototype.css" />
 <link rel="stylesheet" href="css/animations.css" />
 
-<!-- Shared helpers + state; loaded in <head> so returning visits skip the entrance animations -->
+<!-- jQuery 3.7.1 (as in production) + shared helpers/state; loaded in <head> so returning visits skip the entrance animations -->
+<script src="vendor/jquery/jquery-3.7.1.min.js"></script>
 <script src="js/core.js"></script>
 </head>
 <body data-page="signup-details">
@@ -32,7 +33,7 @@
 <div id="signup">
 <main class="shell">
 <section class="panel">
-    <div class="toast-region" id="toastRegion" role="status" aria-live="polite"></div>
+    <div class="toast-region" role="status" aria-live="polite"></div>
 
     <div class="column">
       <div class="logo" role="img" aria-label="Fundstore"></div>
@@ -41,8 +42,8 @@
       <!-- Step 1 · Choose method -->
       <!-- Step 2 · Personal details -->
       <div class="step is-active" data-step="details">
-        <form class="form" id="detailsForm" novalidate="novalidate">
-          <div class="field" data-field="nome">
+        <form class="form js-form" data-store="user">
+          <div class="field" data-field="nome" data-validate="name" data-label="nome">
             <label class="label" for="nome">Nome</label>
             <div class="control">
               <input class="input" id="nome" name="nome" type="text" autocomplete="given-name" placeholder="Il tuo nome" aria-describedby="nome-error" />
@@ -51,7 +52,7 @@
             <div class="error" id="nome-error"><span><i class="ph ph-warning-circle" aria-hidden="true"></i><em></em></span></div>
           </div>
 
-          <div class="field" data-field="cognome">
+          <div class="field" data-field="cognome" data-validate="name" data-label="cognome">
             <label class="label" for="cognome">Cognome</label>
             <div class="control">
               <input class="input" id="cognome" name="cognome" type="text" autocomplete="family-name" placeholder="Il tuo cognome" aria-describedby="cognome-error" />
@@ -60,7 +61,7 @@
             <div class="error" id="cognome-error"><span><i class="ph ph-warning-circle" aria-hidden="true"></i><em></em></span></div>
           </div>
 
-          <div class="field" data-field="email">
+          <div class="field" data-field="email" data-validate="email">
             <label class="label" for="email">Email</label>
             <div class="control">
               <input class="input" id="email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="nome.utente@fundstore.it" aria-describedby="email-error" />
@@ -69,7 +70,7 @@
             <div class="error" id="email-error"><span><i class="ph ph-warning-circle" aria-hidden="true"></i><em></em></span></div>
           </div>
 
-          <button type="submit" class="btn btn--sky details-submit"><span class="btn__label">Registrati</span></button>
+          <a class="btn btn--sky details-submit js-submit" href="#" role="button" data-prototype-next="signup-password.xhtml"><span class="btn__label">Registrati</span></a>
         </form>
       </div>
 
@@ -91,6 +92,7 @@
 </main>
 </div>
 
+<script src="js/forms.js"></script>
 <script src="js/signup.js"></script>
 </body>
 </html>

@@ -22,7 +22,8 @@
 <link rel="stylesheet" href="css/prototype.css" />
 <link rel="stylesheet" href="css/animations.css" />
 
-<!-- Shared helpers + state; loaded in <head> so returning visits skip the entrance animations -->
+<!-- jQuery 3.7.1 (as in production) + shared helpers/state; loaded in <head> so returning visits skip the entrance animations -->
+<script src="vendor/jquery/jquery-3.7.1.min.js"></script>
 <script src="js/core.js"></script>
 </head>
 <body data-page="approfondimenti">
@@ -60,11 +61,11 @@
       <p class="promo__text">
         Attivando il wallet di Fundstore investi in un click, e vieni remunerato sulla liquidità in giacenza, oggi <b>1,xx%</b>
         <span class="info">
-          <button type="button" class="info__trigger" aria-describedby="walletTip" aria-label="Dettagli sul tasso"><i class="ph ph-info" aria-hidden="true"></i></button>
+          <a class="info__trigger" href="#" role="button" aria-describedby="walletTip" aria-label="Dettagli sul tasso"><i class="ph ph-info" aria-hidden="true"></i></a>
           <span class="tooltip" role="tooltip" id="walletTip">Valore al xx/xx/xx. Il tasso di remunerazione applicato è variabile e pari a <b>Euribor 3 Mesi - 0,6%</b></span>
         </span>
       </p>
-      <button type="button" class="btn-sm btn-sm--sky" data-activate="data-activate">Attiva il wallet</button>
+      <a class="btn-sm btn-sm--sky" href="#" role="button" data-activate="data-activate">Attiva il wallet</a>
     </section>
 
     <a class="me" href="profilo.xhtml">
@@ -83,7 +84,7 @@
           <p class="banner__title">Benvenuto, <span data-user="firstname">Edoardo</span>!</p>
           <p class="banner__text">Sblocca tutte le funzionalità completando la registrazione online in 10 minuti</p>
         </div>
-        <button type="button" class="btn-sm btn-sm--night" data-activate="data-activate">Completa la registrazione</button>
+        <a class="btn-sm btn-sm--night" href="#" role="button" data-activate="data-activate">Completa la registrazione</a>
       </div>
     </header>
 <main class="content">
@@ -100,7 +101,7 @@
             </div>
             <p class="empty__title">Niente da leggere per ora</p>
             <p class="empty__text">Le notizie che arriveranno qui saranno solo quelle rilevanti per i tuoi investimenti</p>
-            <button type="button" class="btn-sm btn-sm--sky" data-activate="data-activate" style="margin-top:30px">Inizia a Investire</button>
+            <a class="btn-sm btn-sm--sky" href="#" role="button" data-activate="data-activate" style="margin-top:30px">Inizia a Investire</a>
           </div>
         </div>
       </section>
@@ -122,10 +123,10 @@
         <li><i class="ph-duotone ph-check-circle" aria-hidden="true"></i><div><p class="modal__item">Un dispositivo mobile con fotocamera</p><p class="modal__hint">Per caricare i documenti e firmare il tuo contratto tramite OTP</p></div></li>
         <li><i class="ph-duotone ph-check-circle" aria-hidden="true"></i><div><p class="modal__item">Il tuo SPID</p><p class="modal__hint">Per firmare il contratto</p></div></li>
       </ul>
-      <button type="button" class="btn btn--sky" aria-disabled="true"><span class="btn__label">Completa in 10 minuti</span></button>
+      <span class="btn btn--sky" aria-disabled="true"><span class="btn__label">Completa in 10 minuti</span></span>
     </div>
     <img class="modal__photo" id="modalPhoto" src="assets/images/activation-modal.jpg" alt="Donna sorridente con uno smartphone in mano" width="379" height="539" />
-    <button type="button" class="modal__close" aria-label="Chiudi"><i class="ph ph-x" aria-hidden="true"></i></button>
+    <a class="modal__close" href="#" role="button" aria-label="Chiudi"><i class="ph ph-x" aria-hidden="true"></i></a>
   </div>
 </div>
 
